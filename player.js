@@ -1,13 +1,24 @@
 // classe figlio di GameObject
 
 class Player extends GameObject{
-    constructor(x, y, width, height){
-        super(x, y, width, height); // vado a prendermi le stesse variabili di GameObject con ereditarietà
+    constructor(x, y, width, height, color = 'white', imageUrl){
+        super(x, y, width, height, color, imageUrl); // vado a prendermi le stesse variabili di GameObject con ereditarietà
         this.speed = 10 // giocatore avrà una velocità per muoversi
         this.controller = {}; // controllo di true false per evitare di seguire una coda di eventi tra cui attesa etc etc
         this.projectiles = []; // proiettili
         this.attackCooldown = 10; // cooldown tra proiettili
+        this.healthPoints = 5;
     }
+
+    collision(){
+        // console.log('HP:', this.healthPoints)
+        this.healthPoints--;
+        if (this.healthPoints <= 0) {
+            this.isAlive = false; // console.log('HEY')
+        }
+    }
+        
+
     draw(ctx){
         super.draw(ctx); // disegno il giocatore
         this.attackCooldown--;
@@ -64,8 +75,14 @@ class Player extends GameObject{
 
     baseAttack(){
         if(this.attackCooldown <= 0){
-            let projectile = new Projectile((this.x + (this.width/2) - 5), this.y, 10, 10) // l'attacco base spawnerà un proiettile, dal muso della nave, a metà. sua origine + metà della sua larghezza
+            let projectile = new Projectile((this.x + (this.width/2) - 5), this.y, 10, 10, 'yellow', './assets/projectile.png') // l'attacco base spawnerà un proiettile, dal muso della nave, a metà. sua origine + metà della sua larghezza
+            let projectile2 = new Projectile(this.x, this.y, 10, 10) 
+            let projectile3 = new Projectile((this.x + (this.width)-10), this.y, 10, 10) 
+            // tripro proiettile con projectile 2 e 3
+
             this.projectiles.push(projectile); // mettiamo nel nostro array proiettili il proiettile, cosi capiamo che sia del player
+            //this.projectiles.push(projectile, projectile2, projectile3); // per multi devo pushare tutti i proiettili
+            
             this.attackCooldown = 10;
         }
     }
